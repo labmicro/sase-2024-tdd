@@ -100,6 +100,30 @@ void ClockSetupTime(clock_t clock, uint8_t const * const time, uint8_t size);
  */
 void ClockNewTick(clock_t clock);
 
+/**
+ * @brief Función para fijar la hora de la alarma del reloj
+ *
+ * @param clock Puntero al descriptor obtenido al crear el reloj
+ * @param time Vector que contiene la hora, minutos y segundos a configurar en formato BCD
+ * @param size Cantidad de elementos en el vector con la hora a configurar
+ */
+void ClockSetupAlarm(clock_t clock, uint8_t const * const time, uint8_t size);
+
+/**
+ * @brief Funcion para obtener la hora y el estado actual de la alarma del reloj
+ *
+ * @remarks La función se puede utilizar con el puntero en el valor NULL y el parametro
+ * size en cero para consultar solo si la alarma esta habilitada.
+ *
+ * @param clock Puntero al descriptor obtenido al crear el reloj
+ * @param time Vector donde se devuelve la hora, minutos y segundos en formato BCD
+ * @param size Cantidad de elementos disponibles en el vector de resultado
+ *
+ * @return true La alarma se encuentra activada y sonará a la hora fijada
+ * @return false La alarma se encuentra deshabilitad y no sonará a la hora fijada
+ */
+bool ClockGetAlarm(clock_t clock, uint8_t * time, uint8_t size);
+
 /* === End of documentation ==================================================================== */
 
 #ifdef __cplusplus

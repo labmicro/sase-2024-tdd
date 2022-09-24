@@ -73,9 +73,11 @@
 
 struct clock_s {
     uint8_t time[TIME_SIZE];
+    uint8_t alarm[4];
     uint16_t ticks_count;
     uint16_t ticks_per_second;
     bool valid;
+    bool enabled;
 };
 
 /* === Private variable declarations =========================================================== */
@@ -145,6 +147,17 @@ void ClockNewTick(clock_t clock) {
     }
 }
 
+void ClockSetupAlarm(clock_t clock, uint8_t const * const time, uint8_t size) {
+    memset(clock->alarm, INITIAL_VALUE, 4);
+    memcpy(clock->alarm, time, size);
+    clock->enabled = true;
+}
+
+bool ClockGetAlarm(clock_t clock, uint8_t * time, uint8_t size) {
+    if ((time != NULL) && (size > 0)) {
+        memcpy(time, clock->alarm, size);
+    }
+    return clock->enabled;
 }
 
 /* === End of documentation ==================================================================== */

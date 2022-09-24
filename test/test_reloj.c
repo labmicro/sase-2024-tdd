@@ -61,11 +61,13 @@
 static clock_t reloj;
 
 /* === Private function implementation ========================================================= */
+
 void SimularTicks(int cantidad) {
     for (int contador = 0; contador < cantidad; contador++) {
         ClockNewTick(reloj);
     }
 }
+
 /* === Public function implementation ========================================================= */
 
 void setUp(void) {
@@ -167,6 +169,15 @@ void test_new_day_arrived(void) {
     SimularTicks(60 * TICKS_PER_SECOND);
     ClockGetTime(reloj, hora, sizeof(hora));
     TEST_ASSERT_EQUAL_UINT8_ARRAY(ESPERADO, hora, sizeof(ESPERADO));
+}
+
+void test_setup_and_get_alarm(void) {
+    static const uint8_t ALARMA[] = {1, 2, 3, 5};
+    uint8_t hora[4];
+
+    ClockSetupAlarm(reloj, ALARMA, sizeof(ALARMA));
+    TEST_ASSERT_TRUE(ClockGetAlarm(reloj, hora, sizeof(hora)));
+    TEST_ASSERT_EQUAL_UINT8_ARRAY(ALARMA, hora, sizeof(ALARMA));
 }
 
 /* === End of documentation ==================================================================== */
