@@ -73,7 +73,7 @@
 
 struct clock_s {
     uint8_t time[TIME_SIZE];
-    uint8_t alarm[4];
+    uint8_t alarm[TIME_SIZE];
     uint16_t ticks_count;
     uint16_t ticks_per_second;
     bool valid;
@@ -174,7 +174,7 @@ void ClockNewTick(clock_t clock) {
 }
 
 void ClockSetupAlarm(clock_t clock, uint8_t const * const time, uint8_t size) {
-    memset(clock->alarm, INITIAL_VALUE, 4);
+    memset(clock->alarm, INITIAL_VALUE, size);
     memcpy(clock->alarm, time, size);
     clock->enabled = true;
 }
