@@ -32,41 +32,64 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-/** \brief Function test for time and alarm clock management
+#ifndef RELOJ_H
+#define RELOJ_H
+
+/** \brief Declarations for time and alarm clock management
  **
  ** \addtogroup clock Clock
  ** \brief Time and alarm clock management
  ** @{ */
 
-/* === Headers files inclusions =============================================================== */
+/* === Headers files inclusions ================================================================ */
 
 #include "reloj.h"
-#include "unity.h"
+#include <stdbool.h>
+#include <stdint.h>
 
-/* === Macros definitions ====================================================================== */
+/* === Cabecera C++ ============================================================================ */
 
-/* === Private data type declarations ========================================================== */
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-/* === Private variable declarations =========================================================== */
+/* === Public macros definitions =============================================================== */
 
-/* === Private function declarations =========================================================== */
+/* === Public data type declarations =========================================================== */
 
-/* === Public variable definitions ============================================================= */
+typedef struct clock_s * clock_t;
 
-/* === Private variable definitions ============================================================ */
+/* === Public variable declarations ============================================================ */
 
-/* === Private function implementation ========================================================= */
+/* === Public function declarations ============================================================ */
 
-/* === Public function implementation ========================================================= */
+/**
+ * @brief Función para iniciar el reloj
+ *
+ * @param ticks_per_second Cantidad de pulsos que debe recibir para contar un segundo
+ *
+ * @return Puntero con el descriptor del nuevo reloj creado
+ */
+clock_t ClockCreate(uint16_t ticks_per_second);
 
-void test_start_up(void) {
-    static const uint8_t ESPERADO[] = {0, 0, 0, 0, 0, 0};
-    uint8_t hora[6];
-    clock_t reloj = ClockCreate(5);
-    TEST_ASSERT_FALSE(ClockGetTime(reloj, hora, 6));
-    TEST_ASSERT_EQUAL_UINT8_ARRAY(ESPERADO, hora, 6);
-}
+/**
+ * @brief Funcion para obtener la hora actual del reloj
+ *
+ * @param clock Puntero al descriptor obtenido al crear el reloj
+ * @param time Vector donde se devuelve la hora, minutos y segundos en formato BCD
+ * @param size Cantidad de elementos disponibles en el vector de resultado
+ *
+ * @return true La hora es válida
+ * @return false El reloj no fué ajustado y por lo tanto la hora no es válida
+ */
+bool ClockGetTime(clock_t clock, uint8_t * time, uint8_t size);
 
 /* === End of documentation ==================================================================== */
 
+#ifdef __cplusplus
+}
+#endif
+
 /** @} End of module definition for doxygen */
+
+#endif /* RELOJ_H */

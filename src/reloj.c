@@ -32,7 +32,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-/** \brief Function test for time and alarm clock management
+/** \brief Implementations of time and alarm clock management
  **
  ** \addtogroup clock Clock
  ** \brief Time and alarm clock management
@@ -41,11 +41,13 @@
 /* === Headers files inclusions =============================================================== */
 
 #include "reloj.h"
-#include "unity.h"
+#include <string.h>
 
 /* === Macros definitions ====================================================================== */
 
 /* === Private data type declarations ========================================================== */
+
+struct clock_s {};
 
 /* === Private variable declarations =========================================================== */
 
@@ -57,14 +59,17 @@
 
 /* === Private function implementation ========================================================= */
 
+static struct clock_s instances;
+
 /* === Public function implementation ========================================================= */
 
-void test_start_up(void) {
-    static const uint8_t ESPERADO[] = {0, 0, 0, 0, 0, 0};
-    uint8_t hora[6];
-    clock_t reloj = ClockCreate(5);
-    TEST_ASSERT_FALSE(ClockGetTime(reloj, hora, 6));
-    TEST_ASSERT_EQUAL_UINT8_ARRAY(ESPERADO, hora, 6);
+clock_t ClockCreate(uint16_t ticks_per_second) {
+    return &instances;
+}
+
+bool ClockGetTime(clock_t reloj, uint8_t * result, uint8_t size) {
+    memset(result, 0, size);
+    return false;
 }
 
 /* === End of documentation ==================================================================== */
