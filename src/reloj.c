@@ -57,6 +57,18 @@
 //! Valor máximo de las decenas en los segundos y minutos
 #define MAX_TENS_VALUE 5
 
+//! Valor máximo de las unidades en un numero BCD
+#define MAX_HOURS_UNITS_VALUE 4
+
+//! Valor máximo de las decenas en los segundos y minutos
+#define MAX_HOURS_TENS_VALUE 2
+
+//! Posición en el vector de las unidades de hora
+#define HOURS_UNITS 1
+
+//! Posición en el vector de las decenas de hora
+#define HOURS_TENS 0
+
 /* === Private data type declarations ========================================================== */
 
 struct clock_s {
@@ -99,8 +111,8 @@ clock_t ClockCreate(uint16_t ticks_per_second) {
     return clock;
 }
 
-bool ClockGetTime(clock_t reloj, uint8_t * result, uint8_t size) {
-    memcpy(result, reloj->time, size);
+bool ClockGetTime(clock_t reloj, uint8_t * time, uint8_t size) {
+    memcpy(time, reloj->time, size);
     return reloj->valid;
 }
 
@@ -124,11 +136,15 @@ void ClockNewTick(clock_t clock) {
                 break;
             }
         }
-        if ((clock->time[0] == 2) && (clock->time[1] == 4)) {
-            clock->time[0] = INITIAL_VALUE;
-            clock->time[1] = INITIAL_VALUE;
+        if (clock->time[HOURS_TENS] == MAX_HOURS_TENS_VALUE) {
+            if (clock->time[HOURS_UNITS] == MAX_HOURS_UNITS_VALUE) {
+                clock->time[HOURS_TENS] = INITIAL_VALUE;
+                clock->time[HOURS_UNITS] = INITIAL_VALUE;
+            }
         }
     }
+}
+
 }
 
 /* === End of documentation ==================================================================== */
