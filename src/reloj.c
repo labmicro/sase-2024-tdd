@@ -48,6 +48,12 @@
 //! Cantidad de elementos en el arreglo BCD con la hora actual
 #define TIME_SIZE 6
 
+//! Valor inicial de las variables del reloj
+#define INITIAL_VALUE 0
+
+//! Indice de la unidad de segundos en el vector de hora
+#define SECONDS_UNITS 5
+
 /* === Private data type declarations ========================================================== */
 
 struct clock_s {
@@ -71,7 +77,7 @@ static struct clock_s instances;
 /* === Public function implementation ========================================================= */
 
 clock_t ClockCreate(uint16_t ticks_per_second) {
-    memset(&instances, 0, sizeof(instances));
+    memset(&instances, INITIAL_VALUE, sizeof(instances));
     return &instances;
 }
 
@@ -88,8 +94,8 @@ void ClockSetupTime(clock_t clock, uint8_t const * const time, uint8_t size) {
 void ClockNewTick(clock_t clock) {
     clock->ticks_count++;
     if (clock->ticks_count == 5) {
-        clock->ticks_count = 0;
-        clock->time[5]++;
+        clock->ticks_count = INITIAL_VALUE;
+        clock->time[SECONDS_UNITS]++;
     }
 }
 
