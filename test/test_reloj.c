@@ -48,6 +48,24 @@
 //! Cantidad de ticks por segundo utilizado en las pruebas
 #define TICKS_PER_SECOND 5
 
+//! Cantidad de ticks para simular un segundo
+#define ONE_SECOND (TICKS_PER_SECOND)
+
+//! Cantidad de ticks para simular diez segundos
+#define TEN_SECONDS (10 * ONE_SECOND)
+
+//! Cantidad de ticks para simular un minuto
+#define ONE_MINUTE (60 * ONE_SECOND)
+
+//! Cantidad de ticks para simular diez segundos
+#define TEN_MINUTES (10 * ONE_MINUTE)
+
+//! Cantidad de ticks para simular una hora
+#define ONE_HOUR (60 * ONE_MINUTE)
+
+//! Cantidad de ticks para simular diez horas
+#define TEN_HOURS (10 * ONE_HOUR)
+
 /* === Private data type declarations ========================================================== */
 
 /* === Private variable declarations =========================================================== */
@@ -106,7 +124,7 @@ void test_one_second_elapsed(void) {
     static const uint8_t ESPERADO[] = {1, 2, 3, 4, 0, 1};
     uint8_t hora[6];
 
-    SimularTicks(TICKS_PER_SECOND);
+    SimularTicks(ONE_SECOND);
     ClockGetTime(reloj, hora, sizeof(hora));
     TEST_ASSERT_EQUAL_UINT8_ARRAY(ESPERADO, hora, sizeof(ESPERADO));
 }
@@ -127,7 +145,7 @@ void test_ten_second_elapsed(void) {
     static const uint8_t ESPERADO[] = {1, 2, 3, 4, 1, 0};
     uint8_t hora[6];
 
-    SimularTicks(10 * TICKS_PER_SECOND);
+    SimularTicks(TEN_SECONDS);
     ClockGetTime(reloj, hora, sizeof(hora));
     TEST_ASSERT_EQUAL_UINT8_ARRAY(ESPERADO, hora, sizeof(ESPERADO));
 }
@@ -136,7 +154,7 @@ void test_one_minute_elapsed(void) {
     static const uint8_t ESPERADO[] = {1, 2, 3, 5, 0, 0};
     uint8_t hora[6];
 
-    SimularTicks(60 * TICKS_PER_SECOND);
+    SimularTicks(ONE_MINUTE);
     ClockGetTime(reloj, hora, sizeof(hora));
     TEST_ASSERT_EQUAL_UINT8_ARRAY(ESPERADO, hora, sizeof(ESPERADO));
 }
@@ -145,7 +163,7 @@ void test_ten_minute_elapsed(void) {
     static const uint8_t ESPERADO[] = {1, 2, 4, 4, 0, 0};
     uint8_t hora[6];
 
-    SimularTicks(10 * 60 * TICKS_PER_SECOND);
+    SimularTicks(TEN_MINUTES);
     ClockGetTime(reloj, hora, sizeof(hora));
     TEST_ASSERT_EQUAL_UINT8_ARRAY(ESPERADO, hora, sizeof(ESPERADO));
 }
@@ -154,7 +172,7 @@ void test_one_hour_elapsed(void) {
     static const uint8_t ESPERADO[] = {1, 3, 3, 4, 0, 0};
     uint8_t hora[6];
 
-    SimularTicks(60 * 60 * TICKS_PER_SECOND);
+    SimularTicks(ONE_HOUR);
     ClockGetTime(reloj, hora, sizeof(hora));
     TEST_ASSERT_EQUAL_UINT8_ARRAY(ESPERADO, hora, sizeof(ESPERADO));
 }
@@ -163,7 +181,7 @@ void test_ten_hour_elapsed(void) {
     static const uint8_t ESPERADO[] = {2, 2, 3, 4, 0, 0};
     uint8_t hora[6];
 
-    SimularTicks(10 * 60 * 60 * TICKS_PER_SECOND);
+    SimularTicks(TEN_HOURS);
     ClockGetTime(reloj, hora, sizeof(hora));
     TEST_ASSERT_EQUAL_UINT8_ARRAY(ESPERADO, hora, sizeof(ESPERADO));
 }
@@ -174,7 +192,7 @@ void test_new_day_arrived(void) {
     uint8_t hora[6];
 
     ClockSetupTime(reloj, INICIAL, sizeof(INICIAL));
-    SimularTicks(60 * TICKS_PER_SECOND);
+    SimularTicks(ONE_MINUTE);
     ClockGetTime(reloj, hora, sizeof(hora));
     TEST_ASSERT_EQUAL_UINT8_ARRAY(ESPERADO, hora, sizeof(ESPERADO));
 }
@@ -193,7 +211,7 @@ void test_setup_and_fire_alarm(void) {
     uint8_t hora[4];
 
     ClockSetupAlarm(reloj, ALARMA, sizeof(ALARMA));
-    SimularTicks(60 * TICKS_PER_SECOND);
+    SimularTicks(ONE_MINUTE);
 
     TEST_ASSERT_TRUE(alarma_activada);
 }
