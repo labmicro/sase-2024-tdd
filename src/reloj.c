@@ -54,11 +54,17 @@
 //! Valor máximo de las unidades en un numero BCD
 #define MAX_UNITS_VALUE 9
 
+//! Valor máximo de las decenas en los segundos y minutos
+#define MAX_TENS_VALUE 5
+
 //! Indice de la unidad de segundos en el vector de hora
 #define SECONDS_UNITS 5
 
 //! Indice de la decena de segundos en el vector de hora
 #define SECONDS_TENS 4
+
+//! Indice de la unidad de segundos en el vector de hora
+#define MINUTES_UNITS 3
 
 /* === Private data type declarations ========================================================== */
 
@@ -73,13 +79,29 @@ struct clock_s {
 
 /* === Private function declarations =========================================================== */
 
+/**
+ * @brief Función para incrementar un digito BCD almacenado en un vector
+ *
+ * @param number Puntero al primer digito del numero BCD
+ * @param index Indice del digito que se incrementa
+ */
+static void IncrementDigit(uint8_t number[], uint8_t index);
+
 /* === Public variable definitions ============================================================= */
 
 /* === Private variable definitions ============================================================ */
 
+static struct clock_s instances;
+
 /* === Private function implementation ========================================================= */
 
-static struct clock_s instances;
+static void IncrementDigit(uint8_t number[], uint8_t index) {
+    number[index]++;
+    if (number[index] > MAX_UNITS_VALUE) {
+        number[index--] = INITIAL_VALUE;
+        number[index]++;
+    }
+}
 
 /* === Public function implementation ========================================================= */
 
@@ -106,15 +128,11 @@ void ClockNewTick(clock_t clock) {
     clock->ticks_count++;
     if (clock->ticks_count == clock->ticks_per_second) {
         clock->ticks_count = INITIAL_VALUE;
-        clock->time[SECONDS_UNITS]++;
+        IncrementDigit(clock->time, SECONDS_UNITS);
     }
-    if (clock->time[SECONDS_UNITS] > MAX_UNITS_VALUE) {
-        clock->time[SECONDS_UNITS] = INITIAL_VALUE;
-        clock->time[SECONDS_TENS]++;
-    }
-    if (clock->time[SECONDS_TENS] > 5) {
+    if (clock->time[SECONDS_TENS] > MAX_TENS_VALUE) {
         clock->time[SECONDS_TENS] = INITIAL_VALUE;
-        clock->time[3]++;
+        IncrementDigit(clock->time, MINUTES_UNITS);
     }
 }
 
