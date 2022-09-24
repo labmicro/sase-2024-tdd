@@ -57,21 +57,6 @@
 //! Valor máximo de las decenas en los segundos y minutos
 #define MAX_TENS_VALUE 5
 
-//! Indice de la unidad de segundos en el vector de hora
-#define SECONDS_UNITS 5
-
-//! Indice de la decena de segundos en el vector de hora
-#define SECONDS_TENS 4
-
-//! Indice de la unidad de minutos en el vector de hora
-#define MINUTES_UNITS 3
-
-//! Indice de la decena de minutos en el vector de hora
-#define MINUTES_TENS 2
-
-//! Indice de la unidad de horas en el vector de hora
-#define HOURS_UNITS 1
-
 /* === Private data type declarations ========================================================== */
 
 struct clock_s {
@@ -97,17 +82,11 @@ static void IncrementDigit(uint8_t number[], uint8_t index);
 
 /* === Private variable definitions ============================================================ */
 
+static const uint8_t BCD_LIMITS[] = {MAX_TENS_VALUE, MAX_UNITS_VALUE};
+
 static struct clock_s instances;
 
 /* === Private function implementation ========================================================= */
-
-static void IncrementDigit(uint8_t number[], uint8_t index) {
-    number[index]++;
-    if (number[index] > MAX_UNITS_VALUE) {
-        number[index--] = INITIAL_VALUE;
-        number[index]++;
-    }
-}
 
 /* === Public function implementation ========================================================= */
 
@@ -134,15 +113,16 @@ void ClockNewTick(clock_t clock) {
     clock->ticks_count++;
     if (clock->ticks_count == clock->ticks_per_second) {
         clock->ticks_count = INITIAL_VALUE;
-        IncrementDigit(clock->time, SECONDS_UNITS);
-    }
-    if (clock->time[SECONDS_TENS] > MAX_TENS_VALUE) {
-        clock->time[SECONDS_TENS] = INITIAL_VALUE;
-        IncrementDigit(clock->time, MINUTES_UNITS);
-    }
-    if (clock->time[MINUTES_TENS] > MAX_TENS_VALUE) {
-        clock->time[MINUTES_TENS] = INITIAL_VALUE;
-        IncrementDigit(clock->time, HOURS_UNITS);
+
+        for (int index = sizeof(clock->time) - 1; index > 0; index--) {
+            clock->time[index]++;
+
+            if (clock->time[index] > BCD_LIMITS[index % 2]) {
+                clock->time[index] = INITIAL_VALUE;
+            } else {
+                break;
+            }
+        }
     }
 }
 
