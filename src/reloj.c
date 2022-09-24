@@ -47,7 +47,10 @@
 
 /* === Private data type declarations ========================================================== */
 
-struct clock_s {};
+struct clock_s {
+    uint8_t time[6];
+    bool valid;
+};
 
 /* === Private variable declarations =========================================================== */
 
@@ -68,8 +71,13 @@ clock_t ClockCreate(uint16_t ticks_per_second) {
 }
 
 bool ClockGetTime(clock_t reloj, uint8_t * result, uint8_t size) {
-    memset(result, 0, size);
-    return false;
+    memcpy(result, reloj->time, size);
+    return reloj->valid;
+}
+
+void ClockSetupTime(clock_t clock, uint8_t const * const time, uint8_t size) {
+    clock->valid = true;
+    memcpy(clock->time, time, size);
 }
 
 /* === End of documentation ==================================================================== */

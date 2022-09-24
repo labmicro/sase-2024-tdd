@@ -84,6 +84,15 @@ clock_t ClockCreate(uint16_t ticks_per_second);
  */
 bool ClockGetTime(clock_t clock, uint8_t * time, uint8_t size);
 
+/**
+ * @brief Función para poner en hora el reloj
+ *
+ * @param clock Puntero al descriptor obtenido al crear el reloj
+ * @param time Vector que contiene la hora, minutos y segundos a configurar en formato BCD
+ * @param size Cantidad de elementos en el vector con la hora a configurar
+ */
+void ClockSetupTime(clock_t clock, uint8_t const * const time, uint8_t size);
+
 /* === End of documentation ==================================================================== */
 
 #ifdef __cplusplus
