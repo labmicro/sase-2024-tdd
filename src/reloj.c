@@ -114,7 +114,7 @@ void ClockNewTick(clock_t clock) {
     if (clock->ticks_count == clock->ticks_per_second) {
         clock->ticks_count = INITIAL_VALUE;
 
-        for (int index = sizeof(clock->time) - 1; index > 0; index--) {
+        for (int index = sizeof(clock->time) - 1; index >= 0; index--) {
             clock->time[index]++;
 
             if (clock->time[index] > BCD_LIMITS[index % 2]) {
