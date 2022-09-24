@@ -52,6 +52,7 @@
 
 struct clock_s {
     uint8_t time[TIME_SIZE];
+    uint16_t ticks_count;
     bool valid;
 };
 
@@ -81,6 +82,14 @@ bool ClockGetTime(clock_t reloj, uint8_t * result, uint8_t size) {
 void ClockSetupTime(clock_t clock, uint8_t const * const time, uint8_t size) {
     clock->valid = true;
     memcpy(clock->time, time, size);
+}
+
+void ClockNewTick(clock_t clock) {
+    clock->ticks_count++;
+    if (clock->ticks_count == 5) {
+        clock->ticks_count = 0;
+        clock->time[5]++;
+    }
 }
 
 /* === End of documentation ==================================================================== */

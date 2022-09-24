@@ -93,6 +93,13 @@ bool ClockGetTime(clock_t clock, uint8_t * time, uint8_t size);
  */
 void ClockSetupTime(clock_t clock, uint8_t const * const time, uint8_t size);
 
+/**
+ * @brief Función para contar un nuevo tick de reloj y actualizar la hora
+ *
+ * @param clock Puntero al descriptor obtenido al crear el reloj
+ */
+void ClockNewTick(clock_t clock);
+
 /* === End of documentation ==================================================================== */
 
 #ifdef __cplusplus
