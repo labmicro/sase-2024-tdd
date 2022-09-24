@@ -78,9 +78,12 @@ static struct clock_s instances;
 /* === Public function implementation ========================================================= */
 
 clock_t ClockCreate(uint16_t ticks_per_second) {
-    memset(&instances, INITIAL_VALUE, sizeof(instances));
-    instances.ticks_per_second = ticks_per_second;
-    return &instances;
+    clock_t clock = &instances;
+
+    memset(clock, INITIAL_VALUE, sizeof(struct clock_s));
+    clock->ticks_per_second = ticks_per_second;
+
+    return clock;
 }
 
 bool ClockGetTime(clock_t reloj, uint8_t * result, uint8_t size) {
@@ -98,6 +101,10 @@ void ClockNewTick(clock_t clock) {
     if (clock->ticks_count == clock->ticks_per_second) {
         clock->ticks_count = INITIAL_VALUE;
         clock->time[SECONDS_UNITS]++;
+    }
+    if (clock->time[SECONDS_UNITS] > 9) {
+        clock->time[SECONDS_UNITS] = INITIAL_VALUE;
+        clock->time[4]++;
     }
 }
 
