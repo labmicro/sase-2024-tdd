@@ -128,6 +128,16 @@ void ClockSetupAlarm(clock_t clock, uint8_t const * const time, uint8_t size);
  */
 bool ClockGetAlarm(clock_t clock, uint8_t * time, uint8_t size);
 
+/**
+ * @brief Función para habilitar o deshabilitar la alarma del reloj
+ *
+ * @param clock Puntero al descriptor obtenido al crear el reloj
+ *
+ * @return true La alarma se encuentra activada y sonará a la hora fijada
+ * @return false La alarma se encuentra deshabilitad y no sonará a la hora fijada
+ */
+bool ClockToggleAlarm(clock_t clock);
+
 /* === End of documentation ==================================================================== */
 
 #ifdef __cplusplus

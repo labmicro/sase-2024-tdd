@@ -216,6 +216,17 @@ void test_setup_and_fire_alarm(void) {
     TEST_ASSERT_TRUE(alarma_activada);
 }
 
+void test_setup_and_disable_alarm(void) {
+    static const uint8_t ALARMA[] = {1, 2, 3, 5};
+    uint8_t hora[4];
+
+    ClockSetupAlarm(reloj, ALARMA, sizeof(ALARMA));
+    TEST_ASSERT_FALSE(ClockToggleAlarm(reloj));
+    SimularTicks(ONE_MINUTE);
+
+    TEST_ASSERT_FALSE(alarma_activada);
+}
+
 /* === End of documentation ==================================================================== */
 
 /** @} End of module definition for doxygen */

@@ -129,7 +129,7 @@ void IncrementTime(clock_t clock) {
 }
 
 void CheckAlarmTime(clock_t clock) {
-    bool fire_alarm = true;
+    bool fire_alarm = clock->enabled;
     for (int index = 0; index < sizeof(clock->alarm); index++) {
         if (clock->time[index] != clock->alarm[index]) {
             fire_alarm = false;
@@ -183,6 +183,11 @@ bool ClockGetAlarm(clock_t clock, uint8_t * time, uint8_t size) {
     if ((time != NULL) && (size > 0)) {
         memcpy(time, clock->alarm, size);
     }
+    return clock->enabled;
+}
+
+bool ClockToggleAlarm(clock_t clock) {
+    clock->enabled = !clock->enabled;
     return clock->enabled;
 }
 
