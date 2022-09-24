@@ -105,8 +105,9 @@ bool ClockGetTime(clock_t reloj, uint8_t * result, uint8_t size) {
 }
 
 void ClockSetupTime(clock_t clock, uint8_t const * const time, uint8_t size) {
-    clock->valid = true;
+    memset(clock->time, INITIAL_VALUE, TIME_SIZE);
     memcpy(clock->time, time, size);
+    clock->valid = true;
 }
 
 void ClockNewTick(clock_t clock) {
@@ -122,6 +123,10 @@ void ClockNewTick(clock_t clock) {
             } else {
                 break;
             }
+        }
+        if ((clock->time[0] == 2) && (clock->time[1] == 4)) {
+            clock->time[0] = INITIAL_VALUE;
+            clock->time[1] = INITIAL_VALUE;
         }
     }
 }
