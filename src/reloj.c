@@ -86,12 +86,18 @@ struct clock_s {
 /* === Private function declarations =========================================================== */
 
 /**
- * @brief Función para incrementar un digito BCD almacenado en un vector
+ * @brief Función interna para incrementar la hora a partir del incremento de un segundo
  *
- * @param number Puntero al primer digito del numero BCD
- * @param index Indice del digito que se incrementa
+ * @param clock Puntero a la instancia de reloj a la que se ajusta la hora
  */
-static void IncrementDigit(uint8_t number[], uint8_t index);
+static void IncrementTime(clock_t clock);
+
+/**
+ * @brief Función interna para disparar la alarma a partir del incremento de un segundo
+ *
+ * @param clock Puntero a la instancia de reloj a la que se ajusta la hora
+ */
+static void CheckAlarmTime(clock_t clock);
 
 /* === Public variable definitions ============================================================= */
 
@@ -102,6 +108,38 @@ static const uint8_t BCD_LIMITS[] = {MAX_TENS_VALUE, MAX_UNITS_VALUE};
 static struct clock_s instances;
 
 /* === Private function implementation ========================================================= */
+
+void IncrementTime(clock_t clock) {
+    for (int index = sizeof(clock->time) - 1; index >= 0; index--) {
+        clock->time[index]++;
+
+        if (clock->time[index] > BCD_LIMITS[index % 2]) {
+            clock->time[index] = INITIAL_VALUE;
+        } else {
+            break;
+        }
+    }
+
+    if (clock->time[HOURS_TENS] == MAX_HOURS_TENS_VALUE) {
+        if (clock->time[HOURS_UNITS] == MAX_HOURS_UNITS_VALUE) {
+            clock->time[HOURS_TENS] = INITIAL_VALUE;
+            clock->time[HOURS_UNITS] = INITIAL_VALUE;
+        }
+    }
+}
+
+void CheckAlarmTime(clock_t clock) {
+    bool fire_alarm = true;
+    for (int index = 0; index < sizeof(clock->alarm); index++) {
+        if (clock->time[index] != clock->alarm[index]) {
+            fire_alarm = false;
+            break;
+        }
+    }
+    if (fire_alarm) {
+        clock->EventHandler(clock);
+    }
+}
 
 /* === Public function implementation ========================================================= */
 
@@ -130,34 +168,8 @@ void ClockNewTick(clock_t clock) {
     clock->ticks_count++;
     if (clock->ticks_count == clock->ticks_per_second) {
         clock->ticks_count = INITIAL_VALUE;
-
-        for (int index = sizeof(clock->time) - 1; index >= 0; index--) {
-            clock->time[index]++;
-
-            if (clock->time[index] > BCD_LIMITS[index % 2]) {
-                clock->time[index] = INITIAL_VALUE;
-            } else {
-                break;
-            }
-        }
-
-        if (clock->time[HOURS_TENS] == MAX_HOURS_TENS_VALUE) {
-            if (clock->time[HOURS_UNITS] == MAX_HOURS_UNITS_VALUE) {
-                clock->time[HOURS_TENS] = INITIAL_VALUE;
-                clock->time[HOURS_UNITS] = INITIAL_VALUE;
-            }
-        }
-
-        bool fire_alarm = true;
-        for (int index = 0; index < sizeof(clock->alarm); index++) {
-            if (clock->time[index] != clock->alarm[index]) {
-                fire_alarm = false;
-                break;
-            }
-        }
-        if (fire_alarm) {
-            clock->EventHandler(clock);
-        }
+        IncrementTime(clock);
+        CheckAlarmTime(clock);
     }
 }
 
