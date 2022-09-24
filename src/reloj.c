@@ -71,6 +71,7 @@ static struct clock_s instances;
 /* === Public function implementation ========================================================= */
 
 clock_t ClockCreate(uint16_t ticks_per_second) {
+    memset(&instances, 0, sizeof(instances));
     return &instances;
 }
 
