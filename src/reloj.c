@@ -45,10 +45,13 @@
 
 /* === Macros definitions ====================================================================== */
 
+//! Cantidad de elementos en el arreglo BCD con la hora actual
+#define TIME_SIZE 6
+
 /* === Private data type declarations ========================================================== */
 
 struct clock_s {
-    uint8_t time[6];
+    uint8_t time[TIME_SIZE];
     bool valid;
 };
 
