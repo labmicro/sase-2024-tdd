@@ -51,8 +51,14 @@
 //! Valor inicial de las variables del reloj
 #define INITIAL_VALUE 0
 
+//! Valor máximo de las unidades en un numero BCD
+#define MAX_UNITS_VALUE 9
+
 //! Indice de la unidad de segundos en el vector de hora
 #define SECONDS_UNITS 5
+
+//! Indice de la decena de segundos en el vector de hora
+#define SECONDS_TENS 4
 
 /* === Private data type declarations ========================================================== */
 
@@ -102,9 +108,9 @@ void ClockNewTick(clock_t clock) {
         clock->ticks_count = INITIAL_VALUE;
         clock->time[SECONDS_UNITS]++;
     }
-    if (clock->time[SECONDS_UNITS] > 9) {
+    if (clock->time[SECONDS_UNITS] > MAX_UNITS_VALUE) {
         clock->time[SECONDS_UNITS] = INITIAL_VALUE;
-        clock->time[4]++;
+        clock->time[SECONDS_TENS]++;
     }
 }
 
