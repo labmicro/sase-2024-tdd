@@ -100,6 +100,19 @@ void test_one_second_elapsed(void) {
     ClockGetTime(reloj, hora, sizeof(hora));
     TEST_ASSERT_EQUAL_UINT8_ARRAY(ESPERADO, hora, sizeof(ESPERADO));
 }
+
+void test_one_second_elapsed_with_diferent_frecuency(void) {
+    static const uint8_t ESPERADO[] = {0, 0, 0, 0, 0, 1};
+    uint8_t hora[6];
+
+    clock_t reloj = ClockCreate(2);
+    ClockNewTick(reloj);
+    ClockNewTick(reloj);
+
+    ClockGetTime(reloj, hora, sizeof(hora));
+    TEST_ASSERT_EQUAL_UINT8_ARRAY(ESPERADO, hora, sizeof(ESPERADO));
+}
+
 /* === End of documentation ==================================================================== */
 
 /** @} End of module definition for doxygen */

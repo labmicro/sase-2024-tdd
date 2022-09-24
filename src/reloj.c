@@ -59,6 +59,7 @@
 struct clock_s {
     uint8_t time[TIME_SIZE];
     uint16_t ticks_count;
+    uint16_t ticks_per_second;
     bool valid;
 };
 
@@ -78,6 +79,7 @@ static struct clock_s instances;
 
 clock_t ClockCreate(uint16_t ticks_per_second) {
     memset(&instances, INITIAL_VALUE, sizeof(instances));
+    instances.ticks_per_second = ticks_per_second;
     return &instances;
 }
 
@@ -93,7 +95,7 @@ void ClockSetupTime(clock_t clock, uint8_t const * const time, uint8_t size) {
 
 void ClockNewTick(clock_t clock) {
     clock->ticks_count++;
-    if (clock->ticks_count == 5) {
+    if (clock->ticks_count == clock->ticks_per_second) {
         clock->ticks_count = INITIAL_VALUE;
         clock->time[SECONDS_UNITS]++;
     }
