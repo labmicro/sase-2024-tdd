@@ -112,6 +112,10 @@ void ClockNewTick(clock_t clock) {
         clock->time[SECONDS_UNITS] = INITIAL_VALUE;
         clock->time[SECONDS_TENS]++;
     }
+    if (clock->time[SECONDS_TENS] > 5) {
+        clock->time[SECONDS_TENS] = INITIAL_VALUE;
+        clock->time[3]++;
+    }
 }
 
 /* === End of documentation ==================================================================== */
