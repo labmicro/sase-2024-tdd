@@ -63,8 +63,14 @@
 //! Indice de la decena de segundos en el vector de hora
 #define SECONDS_TENS 4
 
-//! Indice de la unidad de segundos en el vector de hora
+//! Indice de la unidad de minutos en el vector de hora
 #define MINUTES_UNITS 3
+
+//! Indice de la decena de minutos en el vector de hora
+#define MINUTES_TENS 2
+
+//! Indice de la unidad de horas en el vector de hora
+#define HOURS_UNITS 1
 
 /* === Private data type declarations ========================================================== */
 
@@ -133,6 +139,10 @@ void ClockNewTick(clock_t clock) {
     if (clock->time[SECONDS_TENS] > MAX_TENS_VALUE) {
         clock->time[SECONDS_TENS] = INITIAL_VALUE;
         IncrementDigit(clock->time, MINUTES_UNITS);
+    }
+    if (clock->time[MINUTES_TENS] > MAX_TENS_VALUE) {
+        clock->time[MINUTES_TENS] = INITIAL_VALUE;
+        IncrementDigit(clock->time, HOURS_UNITS);
     }
 }
 
