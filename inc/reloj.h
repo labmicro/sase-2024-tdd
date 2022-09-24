@@ -57,7 +57,11 @@ extern "C" {
 
 /* === Public data type declarations =========================================================== */
 
+//! Puntero a un descriptor de reloj
 typedef struct clock_s * clock_t;
+
+//! Puntero a función para notificación de eventos de reloj
+typedef void (*clock_event_t)(clock_t clock);
 
 /* === Public variable declarations ============================================================ */
 
@@ -70,7 +74,7 @@ typedef struct clock_s * clock_t;
  *
  * @return Puntero con el descriptor del nuevo reloj creado
  */
-clock_t ClockCreate(uint16_t ticks_per_second);
+clock_t ClockCreate(uint16_t ticks_per_second, clock_event_t event_handler);
 
 /**
  * @brief Funcion para obtener la hora actual del reloj

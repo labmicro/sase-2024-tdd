@@ -78,6 +78,7 @@ struct clock_s {
     uint16_t ticks_per_second;
     bool valid;
     bool enabled;
+    clock_event_t EventHandler;
 };
 
 /* === Private variable declarations =========================================================== */
@@ -104,11 +105,12 @@ static struct clock_s instances;
 
 /* === Public function implementation ========================================================= */
 
-clock_t ClockCreate(uint16_t ticks_per_second) {
+clock_t ClockCreate(uint16_t ticks_per_second, clock_event_t event_handler) {
     clock_t clock = &instances;
 
     memset(clock, INITIAL_VALUE, sizeof(struct clock_s));
     clock->ticks_per_second = ticks_per_second;
+    clock->EventHandler = event_handler;
 
     return clock;
 }
@@ -138,11 +140,23 @@ void ClockNewTick(clock_t clock) {
                 break;
             }
         }
+
         if (clock->time[HOURS_TENS] == MAX_HOURS_TENS_VALUE) {
             if (clock->time[HOURS_UNITS] == MAX_HOURS_UNITS_VALUE) {
                 clock->time[HOURS_TENS] = INITIAL_VALUE;
                 clock->time[HOURS_UNITS] = INITIAL_VALUE;
             }
+        }
+
+        bool fire_alarm = true;
+        for (int index = 0; index < sizeof(clock->alarm); index++) {
+            if (clock->time[index] != clock->alarm[index]) {
+                fire_alarm = false;
+                break;
+            }
+        }
+        if (fire_alarm) {
+            clock->EventHandler(clock);
         }
     }
 }

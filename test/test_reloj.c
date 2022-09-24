@@ -60,6 +60,8 @@
 
 static clock_t reloj;
 
+static bool alarma_activada;
+
 /* === Private function implementation ========================================================= */
 
 void SimularTicks(int cantidad) {
@@ -68,12 +70,18 @@ void SimularTicks(int cantidad) {
     }
 }
 
+void EventoAlarma(clock_t reloj) {
+    alarma_activada = true;
+}
+
 /* === Public function implementation ========================================================= */
 
 void setUp(void) {
     static const uint8_t INICIAL[] = {1, 2, 3, 4};
 
-    reloj = ClockCreate(TICKS_PER_SECOND);
+    alarma_activada = false;
+
+    reloj = ClockCreate(TICKS_PER_SECOND, EventoAlarma);
     ClockSetupTime(reloj, INICIAL, sizeof(INICIAL));
 }
 
@@ -81,7 +89,7 @@ void test_start_up(void) {
     static const uint8_t ESPERADO[] = {0, 0, 0, 0, 0, 0};
     uint8_t hora[6];
 
-    clock_t reloj = ClockCreate(TICKS_PER_SECOND);
+    clock_t reloj = ClockCreate(TICKS_PER_SECOND, EventoAlarma);
     TEST_ASSERT_FALSE(ClockGetTime(reloj, hora, sizeof(hora)));
     TEST_ASSERT_EQUAL_UINT8_ARRAY(ESPERADO, hora, sizeof(ESPERADO));
 }
@@ -107,7 +115,7 @@ void test_one_second_elapsed_with_diferent_frecuency(void) {
     static const uint8_t ESPERADO[] = {0, 0, 0, 0, 0, 1};
     uint8_t hora[6];
 
-    clock_t reloj = ClockCreate(2);
+    clock_t reloj = ClockCreate(2, EventoAlarma);
     ClockNewTick(reloj);
     ClockNewTick(reloj);
 
@@ -178,6 +186,16 @@ void test_setup_and_get_alarm(void) {
     ClockSetupAlarm(reloj, ALARMA, sizeof(ALARMA));
     TEST_ASSERT_TRUE(ClockGetAlarm(reloj, hora, sizeof(hora)));
     TEST_ASSERT_EQUAL_UINT8_ARRAY(ALARMA, hora, sizeof(ALARMA));
+}
+
+void test_setup_and_fire_alarm(void) {
+    static const uint8_t ALARMA[] = {1, 2, 3, 5};
+    uint8_t hora[4];
+
+    ClockSetupAlarm(reloj, ALARMA, sizeof(ALARMA));
+    SimularTicks(60 * TICKS_PER_SECOND);
+
+    TEST_ASSERT_TRUE(alarma_activada);
 }
 
 /* === End of documentation ==================================================================== */
